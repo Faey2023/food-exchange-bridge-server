@@ -21,7 +21,7 @@ app.listen(port, () => {
 });
 
 //mongodb
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const { configDotenv } = require("dotenv");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.d9lmwal.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -43,6 +43,17 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    //single food details
+    app.get("/foods/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await foodCollection.findOne(query);
+      res.send(result);
+    });
+    //
+
+
+    
 
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
