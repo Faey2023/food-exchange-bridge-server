@@ -37,12 +37,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const foodCollection = client.db("febDB").collection("foods");
+    const partners = client.db("febDB").collection("partners");
 
     app.get("/foods", async (req, res) => {
       const cursor = foodCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+
     //single food details
     app.get("/foods/:id", async (req, res) => {
       const id = req.params.id;
@@ -50,10 +52,13 @@ async function run() {
       const result = await foodCollection.findOne(query);
       res.send(result);
     });
-    //
 
-
-    
+    //partners
+    app.get("/partners", async (req, res) => {
+      const cursor = partners.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
