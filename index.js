@@ -37,7 +37,6 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const foodCollection = client.db("febDB").collection("foods");
-    const partners = client.db("febDB").collection("partners");
 
     //set foods
     app.post("/foods", async (req, res) => {
@@ -63,8 +62,25 @@ async function run() {
     });
 
     //partners
+    const partners = client.db("febDB").collection("partners");
+
     app.get("/partners", async (req, res) => {
       const cursor = partners.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    const foodRequestCollection = client.db("febDB").collection("foodRequest");
+
+    app.post("/foodRequest", async (req, res) => {
+      const requestedFood = req.body;
+      console.log(req.body);
+      const result = await foodRequestCollection.insertOne(requestedFood);
+      res.send(result);
+    });
+
+    app.get("/foodRequest", async (req, res) => {
+      const cursor = foodRequestCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
