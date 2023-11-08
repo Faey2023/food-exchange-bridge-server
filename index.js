@@ -39,8 +39,17 @@ async function run() {
     const foodCollection = client.db("febDB").collection("foods");
     const partners = client.db("febDB").collection("partners");
 
+    //set foods
+    app.post("/foods", async (req, res) => {
+      const addedFoods = req.body;
+      console.log(addedFoods);
+      const result = await foodCollection.insertOne(addedFoods);
+      res.send(result);
+    });
+
+    // get foods
     app.get("/foods", async (req, res) => {
-      const cursor = foodCollection.find();
+      const cursor = foodCollection.find().sort({ foodQuantity: -1 });
       const result = await cursor.toArray();
       res.send(result);
     });
