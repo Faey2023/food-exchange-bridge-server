@@ -75,7 +75,13 @@ async function run() {
       const result = await foodCollection.find(query).toArray();
       res.send(result);
     });
-
+    //delete food request
+    app.delete("/foodRequest/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await foodCollection.deleteOne(query);
+      res.send(result);
+    });
 
     //partners
     const partners = client.db("febDB").collection("partners");
