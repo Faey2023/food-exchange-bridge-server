@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 //
 app.get("/", (req, res) => {
-  res.send("Food Brand Exchange running.");
+  res.send("Food Exchange Bridge is running.");
 });
 
 app.listen(port, () => {
@@ -67,7 +67,7 @@ async function run() {
     });
 
     //specific
-    app.get("/myfoods", async (req, res) => {
+    app.get("/myFoods", async (req, res) => {
       let query = {};
       if (req.query?.email) {
         query = { donatorEmail: req.query.email };
@@ -76,11 +76,30 @@ async function run() {
       res.send(result);
     });
     //delete food request
-    app.delete("/myfoods/:id", async (req, res) => {
+    app.delete("/myFoods/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await foodCollection.deleteOne(query);
       res.send(result);
+    });
+
+    //update food
+    app.patch("/foods/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedFood = req.body;
+      const updateFood = {
+        $set: {
+          foodName: updatedFood.foodName,
+          foodImage: updatedFood.foodImage,
+          foodQuantity: updatedFood.foodQuantity,
+          pickupLocation: updatedFood.pickupLocation,
+          expiredDate: updatedFood.expiredDate,
+          note: updatedFood.note,
+          status: updatedFood.status,
+        },
+      };
+      const result = await foodCollection.updateOne(filter, updateFood);
     });
 
     //partners
